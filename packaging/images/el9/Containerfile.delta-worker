@@ -12,7 +12,12 @@ RUN ARCH=$(uname -m) && \
       ostree-devel && \
     dnf clean all
 
-RUN dnf install -y --installroot=/runtime-root --setopt=install_weak_deps=False --nodocs \
+RUN ARCH=$(uname -m) && \
+    dnf install -y --installroot=/runtime-root --releasever=9 --nobest --nogpgcheck \
+      --setopt=install_weak_deps=False --nodocs \
+      --repofrompath "cs-baseos,https://mirror.stream.centos.org/9-stream/BaseOS/${ARCH}/os/" \
+      --repofrompath "cs-appstream,https://mirror.stream.centos.org/9-stream/AppStream/${ARCH}/os/" \
+      --disablerepo="rhel-*" \
       ostree-libs && \
     dnf --installroot=/runtime-root clean all
 
